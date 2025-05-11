@@ -1,6 +1,3 @@
-/*Toaca Andreia - 311CC*/
-La rularea pe laptopul propriu 50/80 teste + 0/20 valgrind(bonus), Însă pe VmChecker primesc 10 puncte bonus.
-
 Pentru implementarea temei am folosit urmatoarele:
 Pentru o ușoară parcurgere a codului, l-am divizat în mai multe fișiere: main.c, utilities.c, utilities.h și tasks.c. 
 
