@@ -1,0 +1,59 @@
+/*Toaca Andreia - 311CC*/
+La rularea pe laptopul propriu 50/80 teste + 0/20 valgrind(bonus), Însă pe VmChecker primesc 10 puncte bonus.
+
+Pentru implementarea temei am folosit urmatoarele:
+Pentru o ușoară parcurgere a codului, l-am divizat în mai multe fișiere: main.c, utilities.c, utilities.h și tasks.c. 
+
+În fișierul utilities.h sunt structurile pentru Tree și Queue cu toate datele necesare. La fel sunt toate declarate toate funcțiile implementate.
+    struct Tree *bloc1 - nodurile de pe primul nivel al arborelui ce corespund sfertului din stânga sus.
+    struct Tree *bloc2 - nodurile de pe primul nivel al arborelui ce corespund sfertului din dreapta sus.
+    struct Tree *bloc3 - nodurile de pe primul nivel al arborelui ce corespund sfertului din dreapta jos.
+    struct Tree *bloc4 -nodurile de pe primul nivel al arborelui ce corespund sfertului din stânga jos.
+    unsigned char r - valoarea culorii roșu pentru pixelii din zona in blocul respectiv.
+    unsigned char g - valoarea culorii verde pentru pixelii din zona in blocul respectiv.
+    unsigned char b - valoarea culorii albastru pentru pixelii din zona in blocul respectiv.
+    int nivel -  numărul de niveluri din arborele cuaternar
+    int blocsize - dimensiunea unui bloc de aceiași culoare.
+    int x, y - indicele liniei, respectiv coloanei.
+
+În fișierul main.c este funcția principală int main(), unde fac apelul funcțiilor folosite pentru implementarea temei 2. Instrucțiuniile if 
+indică cerințele care va rezolva programul. În cazul opțiunii c1, deschid fișierul de input și output, citesc tipul fișierului, dimensiunea 
+și valoarea maximă a unei culori. Matricea unsigned char **pixeli păstrează valorile RGB, am alocat memorie, iar cu instrucțiunea for citesc 
+imaginea din fișierul de input. Am folosit funcția atoi() din biblioteca <stdlib.h> pentru a transforma stringul argv[2] în valoare integer. 
+Apelez funcția solve_c1() și dau free la matricea de pixeli. În cazul opțiunii c2 fac aceiași pași, cu excepția facptului că fișierul de 
+output este binar și apelez funcția solve_c2(), iar la final închid fișierele de input și output. 
+
+Fișierul tasks.c conține funcțiile solve_c1() și solve_c2().
+Funcția solve_c1(FILE *output, unsigned char **pixel, int size, int factor) - rezolvă cerința 1. Creez arborele Tree *tree1 și coada Queue* 
+queue1 pentru a parcurge arborele. tree1 e primul bloc și are nivelul 1 cu blocsize adică mărimea lui este egală cu toată matricea, în cazul 
+în care totul va fi de aceaiați culoare va fi o singură celulă cu mărimea la toată matricea și x, y este poziția de unde începe matricea. 
+Adaug în coadă arborele, int niv_max, int nr_bloc și int max_size sunt numărul de niveluri din arborele de compresie, numărul de blocuri din 
+imagine, dimensiunea laturii pătratului pentru cea mai mare zonă din imagine care a rămas nedivizată, respectiv aceste valori trebuie afișate 
+în fișierul de output al cerinței. Cu instrucțiunea while parcurgem arborele, atât timp cât coada nu este nulă, extragem arborele, dacă nivelul 
+din arbore este mai mare ca nivelul maxim, nivelul maxim e nivelul arborelui. int aux = verify verifică dacă pot să fac toată imaginea de o 
+singură culoare, astfel dacă e 0 nu este posibil. Creez alte 4 celule la fel, cu excepția pozițiilor x și y.  Dacă e 1, un bloc cu o singură 
+culoare, adică are frunze pe care le calculăm.
+
+Funcția solve_c2(FILE *output, unsigned char **pixel, int size, int factor) - rezolvă cerința 2. Reiterez pașii enumerați de la funcția 
+precedentă, cu aceleași condiții, specificând inițial toată mărimea imaginii. În fișierul de output va fi type = o, dacă nu poate fi de 
+o singură culoare și type = 1 dacă tot blocul e de o singură culoare și scriu în fișier valorile RGB, iar la final eliberez memoria 
+alocată pentru arbore.
+
+Fișierul utilities.c contine functiile auxiliare, care m-au ajutat să rezolv cerințele temei.
+void add(Queue** queue, Tree* tree) - adaugă arborele în coadă. Pentru coadă am folosit o listă dublu înlânțuită. Dacă coada este nulă, 
+aloc memorie pentru o nouă celulă și creiez legăturile necesare unde toate pointeaza la celula nou creată, în caz contrar la fel aloc 
+memorie pentru o nouă celulă adăugată și stabilesc noile legături.
+
+Tree* extract(Queue** queue) - extrage arborele din coadă. Inițial copiez informația din prima celulă a cozii pentru a putea elibera memoria 
+alocată pentru celula respectivă. Dacă e o singură celulă în coadă, coada devine nulă, în caz contrar extrag prima celulă apoi toate pe rând 
+până am extras tot și am eliberat memoriala final. 
+
+int verify(unsigned char **pixel, Tree *tree, int factor) - calculez culoarea medie a blocului, determinând pentru fiecare bloc  media aritmetică 
+a valorilor RED, GREEN, BLUE din submatricea de pixeli care corespunde blocului. Pentru a realiza cele menționate folosesc formulele  puse la 
+dispoziție în enunțul temei 2.
+
+void freeTree(Tree *tree1) - eliberez memoria alocată dinamic pentru arborele de compresie.
+
+void freePixels(unsigned char **pixeli, int size) - eliberez memoria alocată pentru matricea de pixeli în care păstrez valorile RGB.
+
+Tree* create_celula() - creez o nouă celulă căreia îi aloc memoria respectivă, toate câmpurile sunt inițializate cu NULL.
